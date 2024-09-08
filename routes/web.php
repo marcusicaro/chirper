@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Flight;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
 
 /*
@@ -37,8 +38,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test-flight', function () {
-    $article = Flight::create(['title' => 'Traveling to Europe']);
-    var_dump($article->id);
+    Flight::where('title', 'Traveling to Portugal')->chunk(2, function (Collection $flights) {
+        foreach ($flights as $flight) {
+            echo $flight->id . ' ' . $flight->title . '<br>';
+        }
+    });
 });
 
 require __DIR__.'/auth.php';

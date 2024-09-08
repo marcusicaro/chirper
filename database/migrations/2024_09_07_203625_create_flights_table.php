@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('flights', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title');
+            $table->json('options')->nullable();
+            $table->boolean('delayed')->default(false);
             $table->timestamps();
         });
     }
