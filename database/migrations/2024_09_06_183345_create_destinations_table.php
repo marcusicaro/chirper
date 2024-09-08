@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('flights');
-        Schema::create('flights', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('destinations', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
-            $table->json('options')->nullable();
-            $table->timestamp('arrived_at')->nullable();
-            $table->foreignId('destination_id')->constrained()->nullable();
-            $table->boolean('delayed')->default(false);
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('flights');
+        Schema::dropIfExists('destinations');
     }
 };

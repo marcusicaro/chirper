@@ -11,7 +11,7 @@ class Flight extends Model
     use HasFactory;
     use HasUuids;
 
-    protected $fillable = ['title', 'delayed'];
+    protected $fillable = ['title', 'delayed', 'name', 'destination_id', 'arrived_at'];
 
     protected $attributes = [
         'options' => '[]',

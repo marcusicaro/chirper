@@ -5,6 +5,7 @@ use App\Models\Flight;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Destination;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +38,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test-flight', function () {
-    foreach(Flight::where('title', 'Traveling to Portugal')->lazyById(200, $column = 'id')->each->update(['delayed' => false]) as $flight) {
-        echo $flight->id . ' ' . $flight->title . ' ' . $flight->delayed . '<br>';
-    }
+    $count = Flight::where('delayed', 0)->count();
+ 
+    $max = Flight::where('delayed', 0)->max('destination_id');
+
+    return $count . ' ' . $max;
 });
 
 require __DIR__.'/auth.php';
