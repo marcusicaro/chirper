@@ -5,20 +5,37 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Http\RedirectResponse;
 
 class Flight extends Model
 {
     use HasFactory;
     use HasUuids;
 
-    protected $fillable = ['title', 'delayed', 'name', 'destination_id', 'arrived_at'];
+    protected $fillable = ['delayed', 'name', 'destination_id', 'arrived_at', 'destination', 'departure', 'price', 'discount'];
 
     protected $attributes = [
         'options' => '[]',
         'delayed' => false,
+        'destination_id' => 1,
     ];
 
     protected $casts = [
         'options' => 'array',
     ];
+    
+
+    public function store(Request $request): RedirectResponse
+    { 
+        $flight = new Flight;
+ 
+        $flight->name = $request->name;
+        $flight->delayed = $request->delayed;
+        $flight->destination_id = $request->destination_id;
+        $flight->arrived_at = $request->arrived_at;
+ 
+        $flight->save();
+ 
+        return redirect('/flights');
+    }
 }

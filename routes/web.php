@@ -5,6 +5,7 @@ use App\Models\Flight;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\User;
 use App\Models\Destination;
 
 /*
@@ -38,11 +39,39 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test-flight', function () {
-    $count = Flight::where('delayed', 0)->count();
- 
-    $max = Flight::where('delayed', 0)->max('destination_id');
 
-    return $count . ' ' . $max;
+    $firstFlight = Flight::where(['departure' => 'São Paulo', 'destination' => 'Portugal'])->first();
+
+    echo $firstFlight->price;
+
+    $flight = Flight::updateOrCreate(
+        ['departure' => 'Bahia', 'destination' => 'Portugal'],
+        ['price' => 120.00, 'name' => 'Flight Bahia']
+    );
+
+    echo $flight->departure;
 });
+
+Route::get('/user-test', function () {
+     
+    $user = User::find(1);
+ 
+    $user->name; // John
+    $user->email; // john@example.com
+     
+    $user->fill(['name' => "a1s2d3"]);
+    echo $user->name . '<br>'; // Jack
+     
+    echo $user->getOriginal('name') . '<br>'; // John
+
+    $user->save();
+
+    echo 'changed' . '<br>';
+
+    echo $user->getOriginal('name') . '<br>'; // John
+
+});
+
+
 
 require __DIR__.'/auth.php';

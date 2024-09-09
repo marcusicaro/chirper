@@ -15,6 +15,10 @@ return new class extends Migration
         Schema::create('flights', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->string('destination');
+            $table->string('departure');
+            $table->decimal('price', 8, 2)->default(0);
+            $table->decimal('discount', 8, 2)->default(0);
             $table->json('options')->nullable();
             $table->timestamp('arrived_at')->nullable();
             $table->foreignId('destination_id')->constrained()->nullable();
