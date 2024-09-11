@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Destination;
+use Illuminate\Database\Schema\Blueprint;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -40,35 +42,33 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test-flight', function () {
 
-    $firstFlight = Flight::where(['departure' => 'São Paulo', 'destination' => 'Portugal'])->first();
+    $flight = Flight::withTrashed()->find('9cf68147-7e82-4b2a-831e-06a05c07b14c');
 
-    echo $firstFlight->price;
-
-    $flight = Flight::updateOrCreate(
-        ['departure' => 'Bahia', 'destination' => 'Portugal'],
-        ['price' => 120.00, 'name' => 'Flight Bahia']
-    );
-
-    echo $flight->departure;
+    if ($flight->trashed()) {
+        echo 'trasjed';
+    }
 });
 
 Route::get('/user-test', function () {
      
-    $user = User::find(1);
- 
-    $user->name; // John
-    $user->email; // john@example.com
-     
-    $user->fill(['name' => "a1s2d3"]);
-    echo $user->name . '<br>'; // Jack
-     
-    echo $user->getOriginal('name') . '<br>'; // John
+    User::create([
+        'name' => 'John Doe',
+        'email' => 'johndoe@mail.com',
+        'password' => bcrypt('password'),
+    ]);
 
-    $user->save();
+    $user = User::where('email', 'johndoe@mail.com')->first();
 
-    echo 'changed' . '<br>';
+    echo $user->name . '</br>';
 
-    echo $user->getOriginal('name') . '<br>'; // John
+    User::upsert([
+        ['name' => 'JohnJohn Doe', 'email' => 'johndoe@mail.com'],
+        ['name' => 'Jane Doe', 'email' => 'janedoe@mail.com', 'password' => bcrypt('password')],
+    ], uniqueBy: ['email'], update: ['name']);
+
+    $updatedUser = User::where('email', 'johndoe@mail.com')->first();
+
+    echo 'updated: ' . $updatedUser->name . '</br>';
 
 });
 

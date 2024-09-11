@@ -6,11 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\MassPrunable;
 
 class Flight extends Model
 {
     use HasFactory;
     use HasUuids;
+    use SoftDeletes;
+    // use Prunable;
+    use MassPrunable;
 
     protected $fillable = ['delayed', 'name', 'destination_id', 'arrived_at', 'destination', 'departure', 'price', 'discount'];
 
@@ -37,5 +44,10 @@ class Flight extends Model
         $flight->save();
  
         return redirect('/flights');
+    }
+
+    public function prunable(): Builder
+    {
+        return static::where('created_at', '<=', now());
     }
 }
