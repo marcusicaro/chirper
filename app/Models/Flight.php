@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\MassPrunable;
+use App\Models\Scopes\AncientScope;
 
 class Flight extends Model
 {
@@ -49,5 +50,10 @@ class Flight extends Model
     public function prunable(): Builder
     {
         return static::where('created_at', '<=', now());
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new AncientScope);
     }
 }

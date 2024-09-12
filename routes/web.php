@@ -42,11 +42,12 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test-flight', function () {
 
-    $flight = Flight::withTrashed()->find('9cf68147-7e82-4b2a-831e-06a05c07b14c');
+    $all_flights = Flight::all();
 
-    if ($flight->trashed()) {
-        echo 'trasjed';
+    foreach ($all_flights as $flight) {
+        echo $flight->name . '</br>';
     }
+
 });
 
 Route::get('/user-test', function () {
