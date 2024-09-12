@@ -56,4 +56,8 @@ class Flight extends Model
     {
         static::addGlobalScope(new AncientScope);
     }
+    public function scopeCheap(Builder $query): void
+    {
+        $query->where('price', '<=', 100);
+    }
 }

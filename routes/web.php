@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Destination;
 use Illuminate\Database\Schema\Blueprint;
+use App\Models\Scopes\AncientScope;
 
 
 /*
@@ -42,10 +43,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test-flight', function () {
 
-    $all_flights = Flight::all();
+    $all_flights = Flight::cheap()->get();
 
     foreach ($all_flights as $flight) {
-        echo $flight->name . '</br>';
+        echo $flight->price . '</br>';
     }
 
 });
