@@ -52,11 +52,9 @@ Route::get('/test-flight', function () {
 });
 
 Route::get('/user-test', function () {
-    User::create([
-        'name' => 'John Doe333',
-        'email' => '33333@mail.com',
-        'password' => bcrypt('password'),
-    ]);
+    $user = User::withoutEvents(function () {
+    User::findOrFail(14)->delete();
+    });
 });
 
 
