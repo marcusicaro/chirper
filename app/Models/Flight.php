@@ -60,4 +60,9 @@ class Flight extends Model
     {
         $query->where('price', '<=', 100);
     }
+    public function scopeOfDestination(Builder $query, $destination): void
+    {
+        $query->where('destination', $destination);
+    }
+
 }

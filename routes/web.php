@@ -43,35 +43,20 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test-flight', function () {
 
-    $all_flights = Flight::cheap()->get();
+    $all_flights = Flight::withoutGlobalScopes()->withTrashed()->ofDestination('Portugal')->get();
 
     foreach ($all_flights as $flight) {
-        echo $flight->price . '</br>';
+        echo $flight->is($all_flights[1]) ? 'true' : 'false';
     }
 
 });
 
 Route::get('/user-test', function () {
-     
     User::create([
-        'name' => 'John Doe',
-        'email' => 'johndoe@mail.com',
+        'name' => 'John Doe333',
+        'email' => '33333@mail.com',
         'password' => bcrypt('password'),
     ]);
-
-    $user = User::where('email', 'johndoe@mail.com')->first();
-
-    echo $user->name . '</br>';
-
-    User::upsert([
-        ['name' => 'JohnJohn Doe', 'email' => 'johndoe@mail.com'],
-        ['name' => 'Jane Doe', 'email' => 'janedoe@mail.com', 'password' => bcrypt('password')],
-    ], uniqueBy: ['email'], update: ['name']);
-
-    $updatedUser = User::where('email', 'johndoe@mail.com')->first();
-
-    echo 'updated: ' . $updatedUser->name . '</br>';
-
 });
 
 
