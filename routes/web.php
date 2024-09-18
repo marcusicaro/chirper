@@ -9,6 +9,19 @@ use App\Models\User;
 use App\Models\Destination;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\Scopes\AncientScope;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\UserController;
+
+Route::get('/max-length', function () {
+    $maxLength = DB::table('information_schema.COLUMNS')
+        ->where('TABLE_SCHEMA', env('DB_DATABASE'))
+        ->where('TABLE_NAME', 'users')
+        ->where('COLUMN_NAME', 'name')
+        ->value('CHARACTER_MAXIMUM_LENGTH');
+
+    return "The maximum number of characters for the 'name' column is: " . $maxLength;
+});
 
 
 /*
@@ -42,13 +55,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test-flight', function () {
-
-    $all_flights = Flight::withoutGlobalScopes()->withTrashed()->ofDestination('Portugal')->get();
-
-    foreach ($all_flights as $flight) {
-        echo $flight->is($all_flights[1]) ? 'true' : 'false';
-    }
-
+    Schema::table('users', function (Blueprint $table) {
+        $table->index('state');
+    });
 });
 
 Route::get('/user-test', function () {
@@ -57,6 +66,6 @@ Route::get('/user-test', function () {
     });
 });
 
-
+Route::get('/user/{id}', [UserController::class, 'show']);
 
 require __DIR__.'/auth.php';
