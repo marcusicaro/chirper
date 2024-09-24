@@ -1,17 +1,17 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Models\Flight;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
-use App\Models\Destination;
 use Illuminate\Database\Schema\Blueprint;
-use App\Models\Scopes\AncientScope;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PhotoController;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\PhotoCommentController;
 
 Route::get('/max-length', function () {
     $maxLength = DB::table('information_schema.COLUMNS')
@@ -67,5 +67,12 @@ Route::get('/user-test', function () {
 });
 
 Route::get('/user/{id}', [UserController::class, 'show']);
+
+Route::apiResource('photos', PhotoController::class)
+        ->missing(function ($request) {
+            return Redirect::route('photos.index');
+        })->withTrashed(['show']);
+
+Route::resource('photos.comments', PhotoCommentController::class);
 
 require __DIR__.'/auth.php';
