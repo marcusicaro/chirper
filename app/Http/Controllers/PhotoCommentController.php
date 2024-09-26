@@ -25,7 +25,7 @@ class PhotoCommentController extends Controller
             'content' => 'required|string|max:255',
         ]);
 
-        $photo->comments()->create($request->all());
+        $photo->comments()->create($request->except('_token'));
 
         return redirect()->route('photos.comments.index', $photo->id)
                          ->with('success', 'Comment added successfully.');

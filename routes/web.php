@@ -73,6 +73,9 @@ Route::apiResource('photos', PhotoController::class)
             return Redirect::route('photos.index');
         })->withTrashed(['show']);
 
+        
+Route::resource('photos', PhotoController::class);
+
 Route::resource('photos.comments', PhotoCommentController::class);
 
 require __DIR__.'/auth.php';
