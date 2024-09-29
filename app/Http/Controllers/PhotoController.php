@@ -45,7 +45,7 @@ class PhotoController extends Controller
         $photo->description = $request->description;
         $photo->save();
 
-        return redirect()->route('photos.index');
+        return redirect()->route('asd');
     }
 
     public function destroy($id)

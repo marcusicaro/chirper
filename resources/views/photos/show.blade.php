@@ -9,5 +9,5 @@
         @method('DELETE')
         <button type="submit">Delete</button>
     </form>
-    <a href="{{ route('photos.index') }}">Back to Photos</a>
+    <a href="{{ route('asd') }}">Back to Photos</a>
 @endsection

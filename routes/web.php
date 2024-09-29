@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -66,16 +67,16 @@ Route::get('/user-test', function () {
     });
 });
 
-Route::get('/user/{id}', [UserController::class, 'show']);
+Route::singleton('user', UserController::class);
+      
+Route::singleton('photos', PhotoController::class)->creatable();
 
-Route::apiResource('photos', PhotoController::class)
-        ->missing(function ($request) {
-            return Redirect::route('photos.index');
-        })->withTrashed(['show']);
+Route::resource('photos.comments', PhotoCommentController::class)->scoped([
+    'comment' => 'slug',
+]);
 
-        
-Route::resource('photos', PhotoController::class);
-
-Route::resource('photos.comments', PhotoCommentController::class);
+Route::resource('users', AdminUserController::class)->parameters([
+    'users' => 'admin_user'
+]);
 
 require __DIR__.'/auth.php';
