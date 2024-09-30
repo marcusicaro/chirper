@@ -1,41 +1,11 @@
 <?php
-
-use App\Http\Controllers\AdminUserController;
+ 
+use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Models\User;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\PhotoController;
-use Illuminate\Support\Facades\Redirect;
-use App\Http\Controllers\PhotoCommentController;
-
-Route::get('/max-length', function () {
-    $maxLength = DB::table('information_schema.COLUMNS')
-        ->where('TABLE_SCHEMA', env('DB_DATABASE'))
-        ->where('TABLE_NAME', 'users')
-        ->where('COLUMN_NAME', 'name')
-        ->value('CHARACTER_MAXIMUM_LENGTH');
-
-    return "The maximum number of characters for the 'name' column is: " . $maxLength;
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
+ 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -44,39 +14,19 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
+ 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
+ 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::get('/test-flight', function () {
-    Schema::table('users', function (Blueprint $table) {
-        $table->index('state');
-    });
-});
-
-Route::get('/user-test', function () {
-    $user = User::withoutEvents(function () {
-    User::findOrFail(14)->delete();
-    });
-});
-
-Route::singleton('user', UserController::class);
-      
-Route::singleton('photos', PhotoController::class)->creatable();
-
-Route::resource('photos.comments', PhotoCommentController::class)->scoped([
-    'comment' => 'slug',
-]);
-
-Route::resource('users', AdminUserController::class)->parameters([
-    'users' => 'admin_user'
-]);
-
+ 
+Route::resource('chirps', ChirpController::class)
+    ->only(['index', 'store'])
+    ->middleware(['auth', 'verified']);
+ 
 require __DIR__.'/auth.php';
