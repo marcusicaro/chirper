@@ -9,7 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
- 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 #[ObservedBy([UserObserver::class])]
 
 class User extends Authenticatable
@@ -46,4 +47,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function chirps(): HasMany
+    {
+        return $this->hasMany(Chirp::class);
+    }
 }
