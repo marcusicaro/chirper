@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm, Head } from '@inertiajs/vue3';
  
 defineProps(['chirps']);
+
  
 const form = useForm({
     message: '',
@@ -24,7 +25,7 @@ const form = useForm({
                     class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                 ></textarea>
                 <InputError :message="form.errors.message" class="mt-2" />
-                <PrimaryButton class="mt-4">Chirp</PrimaryButton>
+                <PrimaryButton class="mt-4">chirp</PrimaryButton>
             </form>
  
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
