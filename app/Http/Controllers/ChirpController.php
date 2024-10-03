@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChirpRequest;
 use App\Models\Chirp;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -62,7 +64,7 @@ class ChirpController extends Controller
     public function update(ChirpRequest $request, Chirp $chirp): RedirectResponse
     {
         $validated = $request->validated();
-        $chirp->update($validated);
+        $request->user()->chirps()->create($validated);
 
         return redirect()->route('chirps.index');
     }
@@ -73,6 +75,10 @@ class ChirpController extends Controller
      */
     public function destroy(Chirp $chirp)
     {
-        //
+        Gate::authorize('delete', $chirp);
+
+        $chirp->delete();
+
+        return redirect(route('chirps.index'));
     }
 }
