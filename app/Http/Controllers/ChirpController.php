@@ -63,6 +63,10 @@ class ChirpController extends Controller
      */
     public function update(ChirpRequest $request, Chirp $chirp): RedirectResponse
     {
+        if (!Gate::any(['isAdmin', 'update'], $chirp)) {
+            return redirect(route('index'));
+        } 
+
         $validated = $request->validated();
         $request->user()->chirps()->create($validated);
 
@@ -75,6 +79,7 @@ class ChirpController extends Controller
      */
     public function destroy(Chirp $chirp)
     {
+        
         Gate::authorize('delete', $chirp);
 
         $chirp->delete();

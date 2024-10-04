@@ -24,8 +24,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        Gate::before(function (User $user, string $ability) {
+            if ($user->isAdministrator()) {
+                return true;
+            }
+        });
+
+        Gate::define('isAdmin', function ($user) {
+            return $user->role === 'admin';
+        });
         Model::preventLazyLoading(! $this->app->isProduction());
         Model::preventSilentlyDiscardingAttributes(! $this->app->isProduction());
-        Gate::define('update-post', [ChirpPolicy::class, 'update']);
     }
 }
