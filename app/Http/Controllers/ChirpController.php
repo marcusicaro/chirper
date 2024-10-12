@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ChirpRequest;
-use App\Models\Chirp;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use App\Models\Chirp;
 use Inertia\Response;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class ChirpController extends Controller
 {
@@ -24,66 +21,44 @@ class ChirpController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(ChirpRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+
         $request->user()->chirps()->create($validated);
 
-        return redirect()->route('chirps.index');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Chirp $chirp)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Chirp $chirp)
-    {
-        //
+        return to_route('chirps.index');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ChirpRequest $request, Chirp $chirp): RedirectResponse
+    public function update(Request $request, Chirp $chirp): RedirectResponse
     {
-        if (!Gate::any(['isAdmin', 'update'], $chirp)) {
-            return redirect(route('index'));
-        } 
+        $this->authorize('update', $chirp);
 
-        $validated = $request->validated();
-        $request->user()->chirps()->create($validated);
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
 
-        return redirect()->route('chirps.index');
+        $chirp->update($validated);
+
+        return to_route('chirps.index');
     }
-
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Chirp $chirp)
+    public function destroy(Chirp $chirp): RedirectResponse
     {
-        
-        Gate::authorize('delete', $chirp);
+        $this->authorize('delete', $chirp);
 
         $chirp->delete();
 
-        return redirect(route('chirps.index'));
+        return to_route('chirps.index');
     }
 }

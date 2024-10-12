@@ -2,6 +2,7 @@
  
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ProfileController;
+use App\Jobs\SlowJob;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,6 +14,20 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+
+Route::get('/about', function() {
+    SlowJob::dispatch();
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+Route::get('/check-env', function () {
+    return env('QUEUE_CONNECTION');
 });
  
 Route::get('/dashboard', function () {
