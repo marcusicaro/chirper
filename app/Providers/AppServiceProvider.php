@@ -29,14 +29,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        // Gate::before(function (User $user, string $ability) {
-        //     if ($user->isAdministrator()) {
-        //         return true;
-        //     }
-        // });
-
-        $this->app->bindMethod([SendChirpCreatedNotifications::class, 'handle'], function (SendChirpCreatedNotifications $job, Application $app) {
-            return $job->handle($app->make(ChirpCreated::class));
+        Gate::before(function (User $user, string $ability) {
+            if ($user->isAdministrator()) {
+                return true;
+            }
         });
 
         Model::preventLazyLoading(! $this->app->isProduction());

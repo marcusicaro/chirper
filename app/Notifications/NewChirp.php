@@ -6,8 +6,11 @@ use App\Models\Chirp;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 class NewChirp extends Notification

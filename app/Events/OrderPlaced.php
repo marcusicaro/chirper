@@ -2,27 +2,25 @@
 
 namespace App\Events;
 
-use App\Models\Chirp;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Bus\Queueable;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
-class ChirpCreated
+class OrderPlaced
 {
-    use Dispatchable, SerializesModels, InteractsWithSockets;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public Chirp $chirp)
-    {}
+    public function __construct()
+    {
+        //
+    }
 
     /**
      * Get the channels the event should broadcast on.

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChirpCreated;
+use App\Listeners\SendChirpCreatedNotifications;
 use Inertia\Inertia;
 use App\Models\Chirp;
 use Inertia\Response;
@@ -25,12 +27,12 @@ class ChirpController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);
 
-        $request->user()->chirps()->create($validated);
-
+        $chirp = $request->user()->chirps()->create($validated);
         return to_route('chirps.index');
     }
 
